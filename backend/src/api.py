@@ -42,8 +42,8 @@ def get_drinks():
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-@app.route("/drink-detail", methods=["GET"])
-@requires_auth("get:drinks-detail")
+@app.route("/drink-details", methods=["GET"])
+@requires_auth("get:drink-details")
 def get_drinks_detail():
     all_drinks = Drink.query.all()
     drinks = [drink.long() for drink in all_drinks]
@@ -84,7 +84,7 @@ def create_drink(payload):
         or appropriate status code indicating reason for failure
 '''
 @app.route("/drink/<int:id>", methods=["PATCH"])
-@requires_auth("patch:drinks")
+@requires_auth("patch:drink")
 def update_drink(payload,id):
     drink = Drink.query.filter(Drink.id == id).one_or_none()
     if drink is None:
@@ -111,7 +111,7 @@ def update_drink(payload,id):
         or appropriate status code indicating reason for failure
 '''
 @app.route("/drink/<int:id>", methods=["DELETE"])
-@requires_auth("delete:drinks")
+@requires_auth("delete:drink")
 def delete_drink(payload,id):
     drink = Drink.query.filter(Drink.id == id).one_or_none()
     if drink is None:
