@@ -105,7 +105,7 @@ class Drink(db.Model):
 
     '''
     delete()
-        deletes a new model into a database
+        deletes a new model from a database
         the model must exist in the database
         EXAMPLE
             drink = Drink(title=req_title, recipe=req_recipe)

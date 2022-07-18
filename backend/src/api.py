@@ -42,7 +42,7 @@ def get_drinks():
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-@app.route("/drinks-detail", methods=["GET"])
+@app.route("/drink-detail", methods=["GET"])
 # @requires_auth("get:drinks-detail")
 def get_drinks_detail():
     drinks = Drink.query.all()
@@ -58,7 +58,19 @@ def get_drinks_detail():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-
+@app.route("/post-drink", methods=["POST"])
+# @requires_auth("post:drinks")
+def create_drink():
+    body = request.get_json(force=True)
+    title = body.get("title", None)
+    recipe = body.get("recipe", None)
+    try:
+        drink = Drink(title=title, recipe=recipe)
+        drink.insert()
+        return jsonify({"success": True, "drinks": drink.long()})
+    except Exception as e:
+        print(e)
+        abort(422)
 
 '''
 @TODO implement endpoint
@@ -71,6 +83,21 @@ def get_drinks_detail():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+@app.route("/drink/<int:id>", methods=["PATCH"])
+# @requires_auth("patch:drinks")
+def update_drink(id):
+    drink = Drink.query.filter(Drink.id == id).one_or_none()
+    if drink is None:
+        abort(404)
+    body = request.get_json(force=True)
+    try:
+        drink.title = body["title"]
+        drink.recipe = json.dumps(body["recipe"])
+        drink.update()
+    except Exception as e:
+        print(e)
+        abort(422)
+    return jsonify({"success": True, "drinks": drink.long()})
 
 
 '''
